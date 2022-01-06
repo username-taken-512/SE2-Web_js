@@ -71,7 +71,7 @@ function displayDev () {
   document.getElementById("display-array").innerHTML = "";
   console.log(devArray)
   for (var i = 0; i < devArray.length; i++) {
-    if(devArray[i].type == "lamp"){
+    if(devArray[i].type == "lamp" && devArray[i].type == "element" && devArray[i].type == "timer"){
       if(devArray[i].value == 1){
         onOrOff = "on"
       }else{
