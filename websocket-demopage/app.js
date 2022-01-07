@@ -5,6 +5,7 @@ var sliderOutput;
 var websocket;
 var onOrOff;
 var fanId;
+var alertValue;
 var devArray = [];
 const TIMER_MILLIS = 1800000;
 var sensorValue, alarmState;
@@ -71,7 +72,7 @@ function displayDev () {
   document.getElementById("display-array").innerHTML = "";
   console.log(devArray)
   for (var i = 0; i < devArray.length; i++) {
-    if(devArray[i].type == "lamp" && devArray[i].type == "element" && devArray[i].type == "timer"){
+    if(devArray[i].type == "lamp" || devArray[i].type == "element"){
       if(devArray[i].value == 1){
         onOrOff = "on"
       }else{
@@ -91,15 +92,25 @@ function displayDev () {
     } else if(devArray[i].type == "alarm"){
       if(devArray[i].value == 0){
         alarmState = "off"
-        document.getElementById("display-array").innerHTML += " <font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=on onClick=reply_click(this)><a>" + "On" + "</a></button>" + "<button class=main__btn id="+i+" value=off onClick=reply_click(this) ><a>" + "Off" + "</a></button><br><font class=status__text>Status: "+ alarmState +"</font><br>";
+        document.getElementById("display-array").innerHTML += "<br> <font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=on onClick=reply_click(this)><a>" + "On" + "</a></button>" + "<button class=main__btn id="+i+" value=off onClick=reply_click(this) ><a>" + "Off" + "</a></button><br><font class=status__text>Status: "+ alarmState +"</font><br>";
       }else if(devArray[i].value == 1){
         alarmState = "on"
-        document.getElementById("display-array").innerHTML += " <font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=on onClick=reply_click(this)><a>" + "On" + "</a></button>" + "<button class=main__btn id="+i+" value=off onClick=reply_click(this) ><a>" + "Off" + "</a></button><br><font class=status__text>Status: "+ alarmState +"</font><br>";
+        document.getElementById("display-array").innerHTML += " <br><font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=on onClick=reply_click(this)><a>" + "On" + "</a></button>" + "<button class=main__btn id="+i+" value=off onClick=reply_click(this) ><a>" + "Off" + "</a></button><br><font class=status__text>Status: "+ alarmState +"</font><br>";
       }else{
         alarmState = "triggered"
-        document.getElementById("display-array").innerHTML += " <font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=off onClick=reply_click(this) ><a>" + "Off" + "</a></button><br><font class=status__text>Status: "+ alarmState +"</font><br>";
+        document.getElementById("display-array").innerHTML += " <br><font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=off onClick=reply_click(this) ><a>" + "Off" + "</a></button><br><font class=status__text>Status: "+ alarmState +"</font><br>";
         Swal.fire('Warning', devArray[i].name+' has been triggered', 'warning')
       }
+    }else if(devArray[i].type == "autotoggle"){
+      if(devArray[i].value == 1){
+        onOrOff = "on"
+      }else{
+       onOrOff = "off"
+      }
+      document.getElementById("display-array").innerHTML += " <br><font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=on onClick=reply_click(this)><a>" + "On" + "</a></button>" + "<button class=main__btn id="+i+" value=off name=lamp onClick=reply_click(this) ><a>" + "Off" + "</a></button><br><font class=status__text>Status: "+ onOrOff +"</font><br>";
+    } else if(devArray[i].type == "autosettings"){
+      
+      document.getElementById("display-array").innerHTML += "<br> <font class=nameOfDevice>"+devArray[i].name+"</font>"+" "+"<button class=main__btn id="+i+" value=on onClick=setOwnValue(this)><a>" + "Set Value" + "</a></button>" + "<br><font class=status__text>Current temperature: "+ devArray[i].value +"</font><br>";
     }
   }
 }
@@ -179,6 +190,48 @@ const highlightMenu = () => {
     websocket.send(sendTimer)
     Swal.fire('Timer started!', '30 min started.', 'success')
   }
+
+  function setOwnValue(valueToSet){
+    Swal.fire({
+      title: 'Select field validation',
+      input: 'select',
+      inputOptions: {
+        'Temperature': {
+          15: '15°C',
+          16: '16°C',
+          17: '17°C',
+          18: '18°C',
+          19: '19°C',
+          20: '20°C',
+          21: '21°C',
+          22: '22°C',
+          23: '23°C',
+          24: '24°C',
+          25: '25°C',
+          26: '26°C',
+          27: '27°C',
+          28: '28°C',
+          29: '29°C',
+          30: '30°C'
+        },
+      },
+      inputPlaceholder: 'Select a Temperature',
+      showCancelButton: true,
+      inputValidator: (value) => {
+        return new Promise((resolve) => {
+          if (value != "") {
+            var sendValue = '{"data":"{\\"deviceId\\" :'+devArray[valueToSet.id].deviceId+',\\"name\\":\\"'+devArray[valueToSet.id].name+'\\",\\"type\\":\\"'+devArray[valueToSet.id].type+'\\",\\"value\\":'+value+',\\"householdId\\":'+devArray[valueToSet.id].householdId+',\\"timer\\":'+devArray[valueToSet.id].timer+'}","opcode":20}';
+            websocket.send(sendValue)
+            resolve()
+          } else {
+            resolve('You need to select a Temperature or cancel')
+          }
+        })
+      }
+    })
+    displayDev();
+  }
+
 
   checkForToken();
   websocketFunction();
