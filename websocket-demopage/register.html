@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/3a3b2a4625.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="registerStyle.css" />
+</head>
+<body>
+    <div class="register">
+        <img src="user.png" alt="avatar" class="avatar">
+        <h1>Register</h1>
+
+        <form action="">
+           
+                <input type="email" placeholder="Enter Username (email)" id="uname">
+         
+            
+            <input type="password" placeholder="Enter Password" id="pword">
+            <input type="text" placeholder="Enter Name" id="name">
+            
+            <div>
+                <label class="container">
+                    <input type="checkbox" checked="checked" id="cHouse" name="checkbox">
+                    <span class="checkmark"></span>
+                    <label for="cHouse" class="houseText">Create Household</label>
+                  </label>
+                  
+                  <label class="container">
+                    <input type="checkbox" id="joinH" name="checkbox">
+                    <span class="checkmark"></span>
+                    <label for="joinH" class="houseText">Join household</label>
+                  </label>
+            </div>
+
+            <input type="button" class="button" value="Sign Up" id="register">
+            <input type="button" class="button" value="Sign in" id="login">
+            
+    
+        </form>
+
+    </div>
+</body>
+<script src="registerApp.js"></script>
+</html>

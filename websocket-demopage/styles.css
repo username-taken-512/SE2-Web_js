@@ -270,6 +270,17 @@
     -moz-text-fill-color: transparent;
 }
 
+.hero__alternative{
+    font-size: 30px;
+    background: #ee0979;
+    background: -webkit-linear-gradient(to right, #ff6a00, #ee0979);
+    background: linear-gradient(to right, #ff6a00, #ee0979);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
 .nameOfDevice{
     font-size: 20px;
     background: #d400ff;
